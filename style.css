@@ -297,6 +297,10 @@ figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
   font-size: 0.9rem;
 }
 
+/* 404: one small window. */
+.lost { max-width: 30rem; margin: 3rem auto 0; }
+.lost h1 { margin: 0 0 0.75rem; font-family: var(--pixel); font-size: 2rem; font-weight: 600; line-height: 1.1; }
+
 /* ---------- Live order-book demo (demo/demo.js) ---------- */
 
 button.button { color: var(--ink); cursor: pointer; }
