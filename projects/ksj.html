@@ -10,7 +10,7 @@
   <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="KSJ booking platform · Steven Ma">
-  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:description" content="The booking platform KSJ Swimming runs on: access control inside Postgres, double-booking blocked by the database, $0 a month to host.">
   <meta property="og:url" content="https://stevenmaswim.github.io/projects/ksj.html">
   <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
   <meta property="og:image:width" content="1200">
@@ -63,16 +63,15 @@
   <p>Instead of trusting the app to check permissions, Postgres enforces them: Row-Level Security on 9 tables and a 3-tier role model. The point is that a bug in the front end should not be able to show one family another family's data: the database refuses to return it.</p>
 
   <h3>Double-booking blocked by the schema</h3>
-  <p>A family can book two kids at once, so overlap checks are keyed per student. Booking several slots is atomic: rows are locked in id order, so two bookings can never wait on each other in a cycle. The platform has 70+ tests that run against a live database.</p>
+  <p>A family can book two kids at once, so overlap checks are keyed per student. Booking several slots is atomic: rows are locked in id order, so two bookings can never wait on each other in a cycle. Underneath both, a partial unique index on <code>bookings (slot_id) where status = 'confirmed'</code> makes the database itself refuse a second confirmed booking for the same slot, even if the application code had a bug. The platform has 70+ tests that run against a live database.</p>
 
   <h3>One business timezone, everywhere</h3>
   <p>Every render and every write is pinned to the business timezone, with DST-correct conversion. A customer email never lists a 4 PM lesson as 2 PM.</p>
 
-  <h2>Results</h2>
+  <h2>After launch</h2>
   <ul>
     <li>Shipped features from customer and staff feedback: raised a daily login-code cap from 40 to 200 when families could not book, added per-coach cancellation alerts, and built rain-out handling (with a dry run and undo) that keeps closures out of revenue.</li>
     <li>A pre-launch audit found 0 Critical issues and one High (CSV formula injection in staff exports), which I fixed.</li>
-    <li>$0/month hosting: a serverless Deno edge function, Resend for email, hourly pg_cron reminders.</li>
   </ul>
 
 
