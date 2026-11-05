@@ -53,8 +53,8 @@
   <p>A price-time-priority matching engine that sustains about 380K orders per second. That figure is the median of 5 runs on 12,000 seeded orders, and the benchmark is committed in the repo so anyone can re-run it.</p>
 
   <figure>
-    <img src="../img/order-book-depth.png" alt="Depth chart: cumulative bid quantity stepping down toward 99.75 and cumulative ask quantity stepping up from 100.32">
-    <figcaption>Book depth after a seeded demo run (<code>demo.py</code>): cumulative quantity at each price, bids in green, asks in red.</figcaption>
+    <img src="../img/order-book-depth.svg" alt="Depth chart: cumulative bid quantity builds below 99.70, cumulative ask quantity builds above 100.27, with one small bid and ask a cent apart at the inside">
+    <figcaption>Book depth after one run of <code>demo.py</code>: 12,000 seeded orders from 3 trader threads, then the 25 best levels on each side. Bids dotted, asks hatched. The threads interleave differently on every run, so the exact book changes; its shape does not. Drawn by <code>tools/make_depth_chart.py</code>.</figcaption>
   </figure>
 
   <table class="bench">

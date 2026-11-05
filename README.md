@@ -31,6 +31,12 @@ Each icon is a 16x16 grid of `#` (ink), `-` (paper fill) and `.` (transparent). 
 
 Run it from this folder after any change to the top of the home page. Update the "Last updated" date in `index.html` at the same time.
 
+## Regenerating the depth chart
+
+    python3 tools/make_depth_chart.py    # reads tools/order_book_depth.json, writes img/order-book-depth.svg
+
+The JSON comes from one run of the order-book repo's demo traders (`engine.depth_snapshot(25)`).
+
 ## Regenerating the market chart
 
     python3 tools/make_market_chart.py    # reads tools/tes_lgd_2026-08-29.csv, writes img/market-tes-lgd.svg
