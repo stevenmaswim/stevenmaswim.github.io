@@ -19,6 +19,8 @@
 }
 
 * { box-sizing: border-box; }
+/* `hidden` must win over any display rule (the demo's boot button relies on it). */
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
@@ -294,6 +296,52 @@ figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
   font-family: var(--pixel);
   font-size: 0.9rem;
 }
+
+/* ---------- Live order-book demo (demo/demo.js) ---------- */
+
+button.button { color: var(--ink); cursor: pointer; }
+button.button:disabled { cursor: progress; opacity: 0.7; }
+.demo-note { margin-left: 0.6rem; font-family: var(--mono); font-size: 0.8rem; color: var(--faint); }
+.demo-grid { display: grid; gap: 1.5rem; margin: 0.5rem 0 1.5rem; }
+@media (min-width: 700px) { .demo-grid { grid-template-columns: 3fr 2fr; } }
+.demo-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.4rem 0.2rem;
+  border-bottom: 1.5px solid var(--ink);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--faint);
+}
+.ladder, .tape { font-family: var(--mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.lv { position: relative; display: flex; justify-content: space-between; padding: 0.05rem 0; }
+.lv .bar { position: absolute; top: 3px; bottom: 3px; right: 0; border: 1px solid var(--ink); border-right: 0; }
+/* Same 1-bit fills as the depth chart: bids dotted, asks hatched. */
+.lv.bid .bar { background: radial-gradient(var(--ink) 0.9px, var(--paper) 1.1px) 0 0 / 4px 4px; }
+.lv.ask .bar { background: repeating-linear-gradient(45deg, var(--ink) 0 1.2px, var(--paper) 1.2px 5px); }
+.lv span:not(.bar) { position: relative; padding: 0 0.4rem; background: var(--paper); }
+.mid { margin: 0.2rem 0; padding: 0.1rem; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--muted); border-top: 1px dotted var(--faint); border-bottom: 1px dotted var(--faint); }
+.tape { list-style: none; padding: 0; margin: 0; }
+.tape li { display: grid; grid-template-columns: 5rem 1fr 3rem; padding: 0.05rem 0.4rem; }
+.tape li span:last-child { text-align: right; }
+.tape li.new { animation: flash 1.2s ease-out; }
+@keyframes flash { from { background: var(--ink); color: var(--paper); } to { background: transparent; color: var(--ink); } }
+@media (prefers-reduced-motion: reduce) { .tape li.new { animation: none; } }
+.order-form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; }
+.order-form label { display: grid; gap: 0.2rem; font-family: var(--mono); font-size: 0.75rem; color: var(--faint); }
+.order-form select, .order-form input {
+  width: 7rem;
+  padding: 0.25rem 0.4rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 0;
+  background: var(--bar);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+.order-form input:disabled { opacity: 0.45; }
+.demo-actions { margin-top: 1rem; }
+.demo-status { min-height: 1.7em; margin-top: 0.75rem; font-size: 0.9rem; color: var(--muted); }
 
 /* Previous / next project at the end of each write-up. */
 .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px dotted var(--faint); }

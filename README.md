@@ -31,6 +31,16 @@ Each icon is a 16x16 grid of `#` (ink), `-` (paper fill) and `.` (transparent). 
 
 Run it from this folder after any change to the top of the home page. Update the "Last updated" date in `index.html` at the same time.
 
+## The live order-book demo
+
+`projects/order-book.html` boots the real engine in the browser with Pyodide (CPython in WebAssembly, loaded from the jsDelivr CDN only when a visitor clicks "Boot the engine").
+
+- `demo/orderbook/` is the engine, copied unchanged from the order-book repo (commit in `demo/SOURCE.md`).
+- `demo/bridge.py` is the only new Python: submit, random order flow (the repo demo's mix), state as JSON.
+- `demo/demo.js` loads Pyodide, writes those files into its file system, and draws the ladder and the trade tape.
+- A link to `projects/order-book.html#demo-run` boots the engine straight away.
+- To test locally, serve the folder (`python3 -m http.server`); opening the file directly cannot fetch the engine files.
+
 ## Regenerating the depth chart
 
     python3 tools/make_depth_chart.py    # reads tools/order_book_depth.json, writes img/order-book-depth.svg

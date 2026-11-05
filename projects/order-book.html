@@ -37,6 +37,36 @@
 </header>
 
 <main class="desktop">
+<section class="window demo" id="demo" data-base="../demo/">
+  <div class="titlebar"><span class="box" aria-hidden="true"></span><span class="title">order-book/demo</span><span class="box zoom" aria-hidden="true"></span></div>
+  <div class="pane">
+    <p>My matching engine, the same Python code as the repo, running in your browser. Place orders and watch them match by price, then by time.</p>
+    <p class="demo-start"><button class="button" id="demo-boot" type="button">Boot the engine</button> <span class="demo-note" id="demo-note">Loads Python in your browser (about 10 MB).</span></p>
+    <noscript><p class="demo-status">The demo needs JavaScript.</p></noscript>
+    <div id="demo-ui" hidden>
+      <div class="demo-grid">
+        <div>
+          <div class="demo-head"><span>Price</span><span>Qty</span></div>
+          <div class="ladder" id="ladder"></div>
+        </div>
+        <div>
+          <div class="demo-head"><span>Trades</span><span id="demo-stats"></span></div>
+          <ol class="tape" id="tape"></ol>
+        </div>
+      </div>
+      <form class="order-form" id="order-form">
+        <label>Side <select name="side"><option value="BUY">Buy</option><option value="SELL">Sell</option></select></label>
+        <label>Type <select name="kind"><option value="LIMIT">Limit</option><option value="MARKET">Market</option></select></label>
+        <label>Price <input name="price" type="number" step="0.01" min="0.01" inputmode="decimal"></label>
+        <label>Qty <input name="qty" type="number" step="1" min="1" value="25"></label>
+        <button class="button" type="submit">Place order</button>
+      </form>
+      <p class="demo-actions"><button class="button" id="demo-flow" type="button">Start random flow</button> <button class="button" id="demo-reset" type="button">Reset</button></p>
+      <p class="demo-status" id="demo-status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
 <div class="window">
   <div class="titlebar"><a class="box" href="../index.html" aria-label="Close and go back home"></a><span class="title">order-book/README</span><span class="box zoom" aria-hidden="true"></span></div>
   <div class="pane">
@@ -95,5 +125,6 @@
   </div>
 </div>
 </main>
+<script src="../demo/demo.js"></script>
 </body>
 </html>
