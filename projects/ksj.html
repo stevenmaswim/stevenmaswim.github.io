@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>KSJ booking platform · Steven Ma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@400;600&display=swap">
+  <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="KSJ booking platform · Steven Ma">
+  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:url" content="https://stevenmaswim.github.io/projects/ksj.html">
+  <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../img/icons/favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="writeup">
+<header class="menubar">
+  <nav aria-label="Sections">
+    <a class="me" href="../index.html"><img class="px" src="../img/icons/wave.svg" alt="" width="16" height="16">Steven Ma</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#tools">Tools</a>
+    <a href="../index.html#experience">Experience</a>
+    <a href="../index.html#projects">Projects</a>
+    <a class="res" href="../resume.pdf">Résumé</a>
+  </nav>
+      <ul class="contact">
+        <li><a href="mailto:steven_c_ma@brown.edu" aria-label="Email" title="steven_c_ma@brown.edu"><img class="px" src="../img/icons/mail.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://github.com/stevenmaswim" aria-label="GitHub" title="GitHub"><img class="px" src="../img/icons/github.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://linkedin.com/in/steven--ma" aria-label="LinkedIn" title="LinkedIn"><img class="px" src="../img/icons/linkedin.svg" alt="" width="16" height="16"></a></li>
+      </ul>
+</header>
+
+<main class="desktop">
+<div class="window">
+  <div class="titlebar"><a class="box" href="../index.html" aria-label="Close and go back home"></a><span class="title">ksj-booking/README</span><span class="box zoom" aria-hidden="true"></span></div>
+  <div class="pane">
+  <a class="back" href="../index.html">← Steven Ma</a>
+
+  <h1>KSJ booking platform</h1>
+  <p class="stack">PostgreSQL (Supabase, Row-Level Security) · Deno edge functions · pg_cron · Resend</p>
+  <p class="links"><a href="https://ksjswimming.com">ksjswimming.com</a><a href="https://github.com/stevenmaswim/swim-booking">source</a></p>
+
+  <h2>The problem</h2>
+  <p>KSJ Swimming grew to 300+ students and 100+ active clients, booked into lessons across several coaches and pools. Paper tracking could not keep up. Families needed to book and cancel on their own, staff needed their own view, and two families must never get the same slot.</p>
+
+  <h2>What I built</h2>
+  <p>The production web app the business runs on. Families book with a login code sent by email. Staff sign in with Google, limited to an allowlist. Reminders go out every hour on a schedule, and the whole platform runs at $0 a month in hosting.</p>
+
+  <figure>
+    <img src="../img/ksj-home.jpg" alt="The ksjswimming.com home page: Book a Lesson and My Bookings buttons, and six reasons families choose KSJ">
+    <figcaption>The home page at ksjswimming.com. Families book and manage lessons from here without making an account.</figcaption>
+  </figure>
+
+  <h2>Decisions</h2>
+
+  <h3>Access control inside the database</h3>
+  <p>Instead of trusting the app to check permissions, Postgres enforces them: Row-Level Security on 9 tables and a 3-tier role model. The point is that a bug in the front end should not be able to show one family another family's data: the database refuses to return it.</p>
+
+  <h3>Double-booking blocked by the schema</h3>
+  <p>A family can book two kids at once, so overlap checks are keyed per student. Booking several slots is atomic: rows are locked in id order, so two bookings can never wait on each other in a cycle. The platform has 70+ tests that run against a live database.</p>
+
+  <h3>One business timezone, everywhere</h3>
+  <p>Every render and every write is pinned to the business timezone, with DST-correct conversion. A customer email never lists a 4 PM lesson as 2 PM.</p>
+
+  <h2>Results</h2>
+  <ul>
+    <li>Shipped features from customer and staff feedback: raised a daily login-code cap from 40 to 200 when families could not book, added per-coach cancellation alerts, and built rain-out handling (with a dry run and undo) that keeps closures out of revenue.</li>
+    <li>A pre-launch audit found 0 Critical issues and one High (CSV formula injection in staff exports), which I fixed.</li>
+    <li>$0/month hosting: a serverless Deno edge function, Resend for email, hourly pg_cron reminders.</li>
+  </ul>
+
+
+  <nav class="pager" aria-label="Other projects">
+    <a class="button" href="../work/txdot.html">← TxDOT bridge forecasting</a>
+    <a class="button" href="order-book.html">Order matching engine →</a>
+  </nav>
+  </div>
+</div>
+</main>
+</body>
+</html>

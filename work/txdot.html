@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TxDOT bridge forecasting · Steven Ma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@400;600&display=swap">
+  <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="TxDOT bridge forecasting · Steven Ma">
+  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:url" content="https://stevenmaswim.github.io/work/txdot.html">
+  <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../img/icons/favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="writeup">
+<header class="menubar">
+  <nav aria-label="Sections">
+    <a class="me" href="../index.html"><img class="px" src="../img/icons/wave.svg" alt="" width="16" height="16">Steven Ma</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#tools">Tools</a>
+    <a href="../index.html#experience">Experience</a>
+    <a href="../index.html#projects">Projects</a>
+    <a class="res" href="../resume.pdf">Résumé</a>
+  </nav>
+      <ul class="contact">
+        <li><a href="mailto:steven_c_ma@brown.edu" aria-label="Email" title="steven_c_ma@brown.edu"><img class="px" src="../img/icons/mail.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://github.com/stevenmaswim" aria-label="GitHub" title="GitHub"><img class="px" src="../img/icons/github.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://linkedin.com/in/steven--ma" aria-label="LinkedIn" title="LinkedIn"><img class="px" src="../img/icons/linkedin.svg" alt="" width="16" height="16"></a></li>
+      </ul>
+</header>
+
+<main class="desktop">
+<div class="window">
+  <div class="titlebar"><a class="box" href="../index.html" aria-label="Close and go back home"></a><span class="title">txdot/README</span><span class="box zoom" aria-hidden="true"></span></div>
+  <div class="pane">
+  <a class="back" href="../index.html">← Steven Ma</a>
+
+  <h1>Bridge condition forecasting</h1>
+  <p class="stack">Software Engineering Intern, ML &amp; Data · Texas Department of Transportation · Jun - Aug 2026</p>
+  <p class="stack">Python · SQL · XGBoost · scikit-learn · Snowflake</p>
+
+  <h2>The problem</h2>
+  <p>Texas inspects its bridges on a schedule and records a condition rating each time. The question was how each bridge will deteriorate over the next 10 and 20 years, using 1.7M inspection records for about 85K structures stored in an entity-attribute-value schema.</p>
+
+  <h2>What I built</h2>
+  <p>An end-to-end ML pipeline: multi-join SQL extraction from the inspection schema, feature building, model training and evaluation. The output went into Snowflake so the team could query it with SQL. On my supervisor's feedback, I filtered out decommissioned bridges.</p>
+
+  <h2>Decisions</h2>
+
+  <h3>Forecast the change, not the snapshot</h3>
+  <p>I recast the task as forecasting how a bridge deteriorates over time, with the time gap as an input. That turned the records into 575K inspection-pair training examples. The split is by bridge ID (GroupShuffleSplit, enforced by a test), so no bridge appears in both training and test data.</p>
+
+  <h3>Trust the zeros</h3>
+  <p>12 of the 28 model inputs scored exactly 0.0 importance in all 4 models. The pipeline ran cleanly, but those inputs were wired to NULL placeholders. I reconciled 65 export headers against the schema, and load-rating factors then showed up as top-5 drivers for every target in the first model.</p>
+
+  <h2>Results</h2>
+  <ul>
+    <li>90-96% of 68,959 held-out forecasts within ±1 point, at 10 and 20 years.</li>
+    <li>At 20 years: 1.5-1.6× lower error than carrying the last rating forward, and 12-21% below a Markov baseline.</li>
+    <li>I reported the one place it lost: 10-year forecasts for culverts.</li>
+  </ul>
+
+
+  <nav class="pager" aria-label="Other projects">
+    <a class="button" href="../projects/market-data.html">← Prediction-market data platform</a>
+    <a class="button" href="../projects/ksj.html">KSJ booking platform →</a>
+  </nav>
+  </div>
+</div>
+</main>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Steven Ma</title>
+  <meta name="description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@400;600&display=swap">
+  <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Steven Ma">
+  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:url" content="https://stevenmaswim.github.io/">
+  <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="img/icons/favicon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="menubar">
+  <nav aria-label="Sections">
+    <a class="me" href="index.html"><img class="px" src="img/icons/wave.svg" alt="" width="16" height="16">Steven Ma</a>
+    <a href="#about">About</a>
+    <a href="#tools">Tools</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a class="res" href="resume.pdf">Résumé</a>
+  </nav>
+      <ul class="contact">
+        <li><a href="mailto:steven_c_ma@brown.edu" aria-label="Email" title="steven_c_ma@brown.edu"><img class="px" src="img/icons/mail.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://github.com/stevenmaswim" aria-label="GitHub" title="GitHub"><img class="px" src="img/icons/github.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://linkedin.com/in/steven--ma" aria-label="LinkedIn" title="LinkedIn"><img class="px" src="img/icons/linkedin.svg" alt="" width="16" height="16"></a></li>
+      </ul>
+</header>
+
+<!-- Desktop icons: wide screens only, fixed on the checkered desktop. -->
+<nav class="desk-icons" aria-label="Shortcuts">
+  <a href="resume.pdf"><img class="px" src="img/icons/resume.svg" alt="" width="32" height="32"><span>resume.pdf</span></a>
+  <a href="#projects"><img class="px" src="img/icons/folder.svg" alt="" width="32" height="32"><span>Projects</span></a>
+  <a href="https://github.com/stevenmaswim"><img class="px" src="img/icons/github.svg" alt="" width="32" height="32"><span>GitHub</span></a>
+  <a href="https://ksjswimming.com"><img class="px" src="img/icons/wave.svg" alt="" width="32" height="32"><span>KSJ Swimming</span></a>
+</nav>
+
+<main class="desktop">
+
+    <section class="window hello">
+      <div class="titlebar"><span class="box" aria-hidden="true"></span><span class="title">steven.ma</span><span class="box zoom" aria-hidden="true"></span></div>
+      <div class="pane">
+        <div class="hello-text">
+          <h1>Steven Ma</h1>
+          <p class="role">Applied Math-CS at Brown, class of 2029</p>
+          <p class="tagline">I build backend systems and data pipelines where correctness matters.</p>
+        </div>
+        <a class="button" href="resume.pdf">Open résumé</a>
+      </div>
+    </section>
+
+    <div class="row">
+    <section id="about" class="window">
+      <div class="titlebar"><span class="box" aria-hidden="true"></span><h2 class="title">About</h2><span class="box zoom" aria-hidden="true"></span></div>
+      <div class="pane">
+        <p>I started teaching kids to swim when I was sixteen. Within a year the business had more families, lessons and coaches than I could track on paper, so I built the <a href="projects/ksj.html">booking system</a> it runs on today. That is how I got into software: a real business broke, and I wanted to fix it properly.</p>
+        <p>Since then I have built backend systems where correctness matters: a booking platform with access control inside Postgres, a concurrent <a href="projects/order-book.html">order matching engine</a>, and an <a href="work/txdot.html">ML pipeline</a> over 1.7M bridge inspections at the Texas Department of Transportation.</p>
+        <p>I swim Division I for Brown, about 20 hours a week, and I am an Associate in the Brown Derivatives Investment Group.</p>
+      </div>
+    </section>
+
+    <section id="tools" class="window">
+      <div class="titlebar"><span class="box" aria-hidden="true"></span><h2 class="title">Tools</h2><span class="box zoom" aria-hidden="true"></span></div>
+      <div class="pane">
+        <ul class="tools">
+          <li><img class="px" src="img/icons/code.svg" alt="" width="32" height="32"><div><span class="k">Languages</span><span class="v">Python, Java, SQL, C, C++17 (learning), JavaScript</span></div></li>
+          <li><img class="px" src="img/icons/database.svg" alt="" width="32" height="32"><div><span class="k">Data</span><span class="v">PostgreSQL, SQLite, Snowflake, pandas, NumPy, scikit-learn, XGBoost</span></div></li>
+          <li><img class="px" src="img/icons/terminal.svg" alt="" width="32" height="32"><div><span class="k">Practice</span><span class="v">Git, Linux, pytest, GitHub Actions, Deno, pg_cron</span></div></li>
+        </ul>
+      </div>
+    </section>
+    </div>
+
+    <section id="experience" class="window">
+      <div class="titlebar"><span class="box" aria-hidden="true"></span><h2 class="title">Experience</h2><span class="box zoom" aria-hidden="true"></span></div>
+      <div class="pane">
+        <ol class="list">
+          <li class="item">
+            <span class="when">Jun - Aug 2026</span>
+            <div>
+              <h3><a href="work/txdot.html">Software Engineering Intern</a> <span class="at">· TxDOT</span></h3>
+              <p>Built an ML pipeline over 1.7M bridge-inspection records. Forecast bridge condition within ±1 point for 90-96% of 68,959 held-out forecasts.</p>
+              <p class="stack">Python, SQL, XGBoost, scikit-learn, Snowflake</p>
+            </div>
+          </li>
+          <li class="item">
+            <span class="when">2024 - Present</span>
+            <div>
+              <h3><a href="https://ksjswimming.com">Founder &amp; Executive Director</a> <span class="at">· KSJ Swimming</span></h3>
+              <p>Grew a swim-instruction business to $40K+ revenue and 300+ students with an instructor team, and built the booking platform it runs on.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="projects" class="window">
+      <div class="titlebar"><span class="box" aria-hidden="true"></span><h2 class="title">Projects</h2><span class="box zoom" aria-hidden="true"></span></div>
+      <div class="pane">
+        <ul class="list">
+          <li class="item">
+            <span class="when">In production</span>
+            <div>
+              <h3><a href="projects/ksj.html">KSJ booking platform</a></h3>
+              <p>The production web app my swim business runs on. Access control lives in Postgres, and double-booking is blocked by the schema.</p>
+              <p class="stack">PostgreSQL, Supabase, Deno</p>
+            </div>
+          </li>
+          <li class="item">
+            <span class="when">2026</span>
+            <div>
+              <h3><a href="projects/order-book.html">Order matching engine</a></h3>
+              <p>A price-time-priority matching engine at about 380K orders/sec, with O(1) cancel. Being ported to C++17.</p>
+              <p class="stack">Python, threading, pytest</p>
+            </div>
+          </li>
+          <li class="item">
+            <span class="when">2026</span>
+            <div>
+              <h3><a href="projects/market-data.html">Prediction-market data platform</a></h3>
+              <p>Five services on a Linux VPS that recorded 11.7M rows of market data.</p>
+              <p class="stack">Python, SQLite, systemd</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <p class="updated">Last updated November 5, 2026</p>
+    <!-- Change the date above whenever the site changes. -->
+
+</main>
+</body>
+</html>

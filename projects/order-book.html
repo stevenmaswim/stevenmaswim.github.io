@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order matching engine · Steven Ma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@400;600&display=swap">
+  <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Order matching engine · Steven Ma">
+  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:url" content="https://stevenmaswim.github.io/projects/order-book.html">
+  <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../img/icons/favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="writeup">
+<header class="menubar">
+  <nav aria-label="Sections">
+    <a class="me" href="../index.html"><img class="px" src="../img/icons/wave.svg" alt="" width="16" height="16">Steven Ma</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#tools">Tools</a>
+    <a href="../index.html#experience">Experience</a>
+    <a href="../index.html#projects">Projects</a>
+    <a class="res" href="../resume.pdf">Résumé</a>
+  </nav>
+      <ul class="contact">
+        <li><a href="mailto:steven_c_ma@brown.edu" aria-label="Email" title="steven_c_ma@brown.edu"><img class="px" src="../img/icons/mail.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://github.com/stevenmaswim" aria-label="GitHub" title="GitHub"><img class="px" src="../img/icons/github.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://linkedin.com/in/steven--ma" aria-label="LinkedIn" title="LinkedIn"><img class="px" src="../img/icons/linkedin.svg" alt="" width="16" height="16"></a></li>
+      </ul>
+</header>
+
+<main class="desktop">
+<div class="window">
+  <div class="titlebar"><a class="box" href="../index.html" aria-label="Close and go back home"></a><span class="title">order-book/README</span><span class="box zoom" aria-hidden="true"></span></div>
+  <div class="pane">
+  <a class="back" href="../index.html">← Steven Ma</a>
+
+  <h1>Order matching engine</h1>
+  <p class="stack">Python · threading · heapq · pytest · GitHub Actions · C++17 port in progress</p>
+  <p class="links"><a href="https://github.com/stevenmaswim/order-book">github.com/stevenmaswim/order-book</a></p>
+
+  <h2>The problem</h2>
+  <p>An exchange matches buy and sell orders by price, then by arrival time. The engine has to be fast, it has to stay fair when many traders send orders at once, and a cancel should not cost a scan of the whole book.</p>
+
+  <h2>What I built</h2>
+  <p>A price-time-priority matching engine that sustains about 380K orders per second. That figure is the median of 5 runs on 12,000 seeded orders, and the benchmark is committed in the repo so anyone can re-run it.</p>
+
+  <figure>
+    <img src="../img/order-book-depth.png" alt="Depth chart: cumulative bid quantity stepping down toward 99.75 and cumulative ask quantity stepping up from 100.32">
+    <figcaption>Book depth after a seeded demo run (<code>demo.py</code>): cumulative quantity at each price, bids in green, asks in red.</figcaption>
+  </figure>
+
+  <table class="bench">
+    <caption>Committed benchmark (<code>benchmarks/RESULTS.md</code>): 5 runs × 12,000 seeded mixed orders, CPython 3.11, Apple M5</caption>
+    <thead><tr><th>Mode</th><th>Min</th><th>Median</th><th>Max</th></tr></thead>
+    <tbody>
+      <tr><td>3 trader threads</td><td>318,593</td><td>382,092</td><td>389,148</td></tr>
+      <tr><td>Single-threaded</td><td>366,320</td><td>382,246</td><td>386,942</td></tr>
+    </tbody>
+  </table>
+  <p class="links"><a href="https://github.com/stevenmaswim/order-book/blob/main/benchmarks/RESULTS.md">RESULTS.md</a><a href="https://github.com/stevenmaswim/order-book/blob/main/benchmarks/run_benchmark.py">run_benchmark.py</a></p>
+
+  <h2>Decisions</h2>
+
+  <h3>O(1) cancel with lazy deletion</h3>
+  <p>Each side of the book is a heap of <code>(price, seq, id)</code>. A cancel only flags the order and lowers the depth count. Stale entries are popped when they reach the top. The arrival counter <code>seq</code> breaks ties in FIFO order, so no custom comparator is needed.</p>
+
+  <h3>Atomic id assignment and insert</h3>
+  <p>Giving an order its id and putting it in the heap happen as one step. Otherwise two concurrent orders could get ids in one order and land in the book in the other, which breaks FIFO priority.</p>
+
+  <h3>Measure the lock before blaming it</h3>
+  <p>The engine serializes every operation behind one lock, and CPython's GIL serializes bytecode anyway, so threads cannot speed it up. I benchmarked 3 threads and a single thread side by side: the medians match (382,092 vs 382,246 orders/sec), so lock contention costs almost nothing. The threads are there to prove correctness under contention, not speed.</p>
+
+  <h2>Results</h2>
+  <ul>
+    <li>About 380K orders/sec (5-run median, 12,000 seeded orders, committed in-repo).</li>
+    <li>After every stress test, invariant checks assert that filled + remaining + cancelled = quantity, that the book is never crossed, and that trades happen at the maker's price.</li>
+    <li>56 unit tests, run in CI.</li>
+  </ul>
+
+  <h2>Next</h2>
+  <p>I am porting the engine to C++17.</p>
+
+  <nav class="pager" aria-label="Other projects">
+    <a class="button" href="ksj.html">← KSJ booking platform</a>
+    <a class="button" href="market-data.html">Prediction-market data platform →</a>
+  </nav>
+  </div>
+</div>
+</main>
+</body>
+</html>

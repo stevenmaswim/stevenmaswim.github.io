@@ -1,0 +1,308 @@
+/* An early desktop computer: a checkered putty-and-sage desktop, a menu bar,
+   and each section in its own window with a striped title bar and a square
+   close box. Pixel font for titles only; IBM Plex for everything you read.
+   Muted, low-contrast greige, never bright white. */
+
+:root {
+  --desk-a: #b7b6a1;     /* desktop checker, light */
+  --desk-b: #a9a893;     /* desktop checker, dark */
+  --paper: #e5e3d4;      /* window background */
+  --bar: #ecebdf;        /* menu bar */
+  --ink: #2c2c26;        /* borders, titles, body text */
+  --muted: #55554a;
+  --faint: #666555;     /* 4.57:1 on the window colour (WCAG AA for small text) */
+  --rule: #c7c5b3;
+  --shadow: rgba(44, 44, 38, 0.35);
+  --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --pixel: "Pixelify Sans", "IBM Plex Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  font: 16px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  /* The checkered desktop. */
+  background: repeating-conic-gradient(var(--desk-a) 0 25%, var(--desk-b) 0 50%) 0 0 / 4px 4px;
+}
+
+::selection { background: var(--ink); color: var(--paper); }
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+a:hover, a:focus-visible { background: var(--ink); color: var(--paper); text-decoration: none; }
+
+code { font-family: var(--mono); font-size: 0.875em; }
+
+/* ---------- Menu bar ---------- */
+
+.menubar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.3rem 1rem;
+  background: var(--bar);
+  border-bottom: 1.5px solid var(--ink);
+  font-family: var(--pixel);
+  font-size: 1rem;
+}
+.menubar nav { display: flex; flex-wrap: wrap; gap: 0.1rem 0.25rem; }
+.menubar nav a { padding: 0.05rem 0.55rem; text-decoration: none; }
+.menubar nav a.me { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 600; }
+
+/* Pixel icons stay crisp at 16 and 32 px. */
+.px { display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+
+.contact { display: flex; gap: 0.5rem; list-style: none; padding: 0; margin: 0; }
+/* 16 px icons, ~30 px hit areas; the negative margin keeps the bar thin. */
+.contact a { display: block; padding: 0.45rem; margin: -0.25rem 0; text-decoration: none; }
+/* Hover selects the icon the old way: inverted. */
+.contact a:hover, .contact a:focus-visible { background: none; }
+.contact a:hover .px, .contact a:focus-visible .px { filter: invert(1); }
+
+/* ---------- Desktop and windows ---------- */
+
+.desktop {
+  max-width: 66rem;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 5rem;
+}
+
+.window {
+  margin-bottom: 2rem;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--shadow);
+  scroll-margin-top: 3.5rem;
+}
+
+.titlebar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 1.6rem;
+  padding: 0 0.45rem;
+  border-bottom: 1.5px solid var(--ink);
+  /* The pinstripes. */
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 3px, var(--ink) 3px 4px) 0 4px / 100% calc(100% - 8px) no-repeat,
+    var(--paper);
+}
+.titlebar .title {
+  margin: 0;
+  padding: 0 0.6rem;
+  background: var(--paper);
+  font-family: var(--pixel);
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.6rem;
+  letter-spacing: 0.02em;
+}
+.box {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 0.85rem;
+  height: 0.85rem;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  box-shadow: 0 0 0 2px var(--paper);
+}
+.box.zoom::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  width: 0.35rem;
+  height: 0.35rem;
+  border: 1px solid var(--ink);
+}
+a.box:hover { background: var(--ink); }
+
+.pane { padding: 1.6rem 2rem 1.8rem; }
+.pane p { margin: 0 0 1rem; }
+.pane > :last-child { margin-bottom: 0; }
+
+/* The name window. */
+.hello h1 {
+  margin: 0;
+  font-family: var(--pixel);
+  font-size: 2.6rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.hello .pane { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem 2rem; }
+.hello .role { margin: 0.5rem 0 0; }
+
+/* A classic default button: thick ring around a rounded box. */
+.button {
+  display: inline-block;
+  padding: 0.35rem 1.1rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 7px;
+  box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink);
+  background: var(--paper);
+  font-family: var(--pixel);
+  font-size: 1.05rem;
+  text-decoration: none;
+  margin: 4px;
+}
+.button:hover, .button:focus-visible { background: var(--ink); color: var(--paper); }
+.hello .tagline { margin: 0.35rem 0 0; color: var(--muted); }
+
+/* Tools: an icon, a small label, the list. */
+.tools { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.1rem; }
+.tools li { display: grid; grid-template-columns: 32px 1fr; column-gap: 1rem; align-items: start; }
+.tools .k { display: block; font-family: var(--mono); font-size: 0.8rem; color: var(--faint); }
+.tools .v { display: block; }
+
+/* Experience and projects: a date, a title, one sentence, a stack line. */
+.list { list-style: none; padding: 0; margin: 0; }
+.item { padding: 1.1rem 0; border-top: 1px dotted var(--faint); }
+.item:first-child { border-top: 0; padding-top: 0; }
+.item:last-child { padding-bottom: 0; }
+.item .when { font-family: var(--mono); font-size: 0.8rem; color: var(--faint); }
+.item h3 { margin: 0.1rem 0 0; font-size: 1rem; font-weight: 600; }
+.item h3 .at { font-weight: 400; color: var(--muted); }
+.item p { margin: 0.3rem 0 0; color: var(--muted); }
+.item .stack { margin-top: 0.3rem; font-family: var(--mono); font-size: 0.8rem; color: var(--faint); }
+
+/* About and Tools side by side on wide screens. */
+.row { margin-bottom: 2rem; }
+.row > .window:last-child { margin-bottom: 0; }
+
+.item p { max-width: 44rem; }
+
+@media (min-width: 960px) {
+  .row { display: grid; grid-template-columns: 3fr 2fr; gap: 2rem; align-items: stretch; }
+  /* Windows in a row share one height; the pane takes the slack. */
+  .row > .window { margin-bottom: 0; display: flex; flex-direction: column; }
+  .row > .window > .pane { flex: 1; }
+  .hello .pane { padding: 2rem 2.4rem 2.2rem; }
+  .hello h1 { font-size: 3.2rem; }
+}
+
+@media (min-width: 700px) {
+  .item { display: grid; grid-template-columns: 9rem 1fr; column-gap: 1.5rem; }
+  .item .when { grid-column: 1; grid-row: 1; padding-top: 0.15rem; }
+  .item > div { grid-column: 2; }
+}
+
+@media (max-width: 600px) {
+  /* Phones: one thin line. Name, résumé and the icons; the section links drop (you scroll). */
+  .menubar { padding: 0.3rem 0.6rem; }
+  .menubar nav a:not(.me):not(.res) { display: none; }
+  .menubar nav a { padding: 0.05rem 0.4rem; }
+  .pane { padding: 1.1rem 1.1rem 1.2rem; }
+  .hello h1 { font-size: 2.1rem; }
+}
+
+/* ---------- Write-up pages: one window per page ---------- */
+
+body.writeup .desktop { max-width: 58rem; }
+/* Wide window, readable lines: prose keeps a comfortable measure, figures and tables use the full width. */
+body.writeup .pane > p, body.writeup .pane > ul, body.writeup .pane > h3 { max-width: 44rem; }
+
+.back { display: inline-block; margin-bottom: 1.25rem; font-family: var(--mono); font-size: 0.85rem; }
+
+body.writeup h1 {
+  margin: 0 0 0.5rem;
+  font-family: var(--pixel);
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+body.writeup h2 {
+  margin: 2.25rem 0 0.6rem;
+  font-family: var(--pixel);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+body.writeup h3 { margin: 1.5rem 0 0.25rem; font-size: 1rem; font-weight: 600; }
+/* Bulleted lists in the write-ups only (not the home page lists). */
+.pane ul:not(.list):not(.tools) { padding-left: 1.2rem; }
+.pane ul:not(.list):not(.tools) > li { margin: 0 0 0.8rem; }
+.pane ul:not(.list):not(.tools) > li::marker { content: "■  "; font-size: 0.6em; color: var(--faint); }
+
+body.writeup .stack { margin: 0 0 0.25rem; font-family: var(--mono); font-size: 0.85rem; color: var(--muted); }
+.links { font-family: var(--mono); font-size: 0.85rem; }
+.links a + a { margin-left: 0.6rem; }
+.links a + a::before { content: "·"; display: inline-block; margin-right: 0.6rem; color: var(--faint); }
+
+figure { margin: 1.75rem 0; }
+figure img { display: block; max-width: 100%; border: 1.5px solid var(--ink); }
+figcaption { margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+
+.bench { width: 100%; margin: 1.5rem 0 0.5rem; border-collapse: collapse; font-family: var(--mono); font-size: 0.85rem; font-variant-numeric: tabular-nums; }
+.bench caption { caption-side: top; text-align: left; margin-bottom: 0.5rem; font-family: var(--sans); font-size: 0.85rem; color: var(--muted); }
+.bench th { text-align: right; font-weight: 500; padding: 0.35rem 0.5rem; border-bottom: 1.5px solid var(--ink); }
+.bench td { text-align: right; padding: 0.35rem 0.5rem; border-bottom: 1px dotted var(--faint); }
+.bench th:first-child, .bench td:first-child { text-align: left; padding-left: 0; }
+
+/* Desktop icons: fixed in the right margin, only where the margin is wide enough. */
+.desk-icons { display: none; }
+@media (min-width: 1500px) {
+  .desk-icons {
+    position: fixed;
+    top: 5rem;
+    right: 2.5rem;
+    z-index: 5;
+    display: grid;
+    gap: 1.6rem;
+    justify-items: center;
+  }
+  .desk-icons a {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    width: 6.5rem;
+    text-decoration: none;
+  }
+  .desk-icons a:hover, .desk-icons a:focus-visible { background: none; color: inherit; }
+  .desk-icons span {
+    padding: 0 0.3rem;
+    background: var(--paper);
+    font-family: var(--pixel);
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+  /* Selected the old way: icon inverted, label black. */
+  .desk-icons a:hover .px, .desk-icons a:focus-visible .px { filter: invert(1); }
+  .desk-icons a:hover span, .desk-icons a:focus-visible span { background: var(--ink); color: var(--paper); }
+}
+
+/* "Last updated" as a small label on the desktop. */
+.updated {
+  display: table;
+  margin: 0.5rem auto 0;
+  padding: 0.1rem 0.6rem;
+  background: var(--paper);
+  border: 1.5px solid var(--ink);
+  font-family: var(--pixel);
+  font-size: 0.9rem;
+}
+
+/* Previous / next project at the end of each write-up. */
+.pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; margin-top: 2.75rem; padding-top: 1.5rem; border-top: 1px dotted var(--faint); }
+.pager .button { font-size: 0.95rem; }
+
+.figure-todo {
+  border: 1px dashed var(--faint);
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--faint);
+}

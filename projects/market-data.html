@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prediction-market data platform · Steven Ma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Pixelify+Sans:wght@400;600&display=swap">
+  <!-- Link previews (LinkedIn, Slack, iMessage). The site lives at https://stevenmaswim.github.io/ (Steven, 2026-11-05). -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Prediction-market data platform · Steven Ma">
+  <meta property="og:description" content="Steven Ma: Applied Math-CS at Brown, D1 swimmer, founder of KSJ Swimming. Backend systems and data pipelines.">
+  <meta property="og:url" content="https://stevenmaswim.github.io/projects/market-data.html">
+  <meta property="og:image" content="https://stevenmaswim.github.io/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../img/icons/favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body class="writeup">
+<header class="menubar">
+  <nav aria-label="Sections">
+    <a class="me" href="../index.html"><img class="px" src="../img/icons/wave.svg" alt="" width="16" height="16">Steven Ma</a>
+    <a href="../index.html#about">About</a>
+    <a href="../index.html#tools">Tools</a>
+    <a href="../index.html#experience">Experience</a>
+    <a href="../index.html#projects">Projects</a>
+    <a class="res" href="../resume.pdf">Résumé</a>
+  </nav>
+      <ul class="contact">
+        <li><a href="mailto:steven_c_ma@brown.edu" aria-label="Email" title="steven_c_ma@brown.edu"><img class="px" src="../img/icons/mail.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://github.com/stevenmaswim" aria-label="GitHub" title="GitHub"><img class="px" src="../img/icons/github.svg" alt="" width="16" height="16"></a></li>
+        <li><a href="https://linkedin.com/in/steven--ma" aria-label="LinkedIn" title="LinkedIn"><img class="px" src="../img/icons/linkedin.svg" alt="" width="16" height="16"></a></li>
+      </ul>
+</header>
+
+<main class="desktop">
+<div class="window">
+  <div class="titlebar"><a class="box" href="../index.html" aria-label="Close and go back home"></a><span class="title">market-data/README</span><span class="box zoom" aria-hidden="true"></span></div>
+  <div class="pane">
+  <a class="back" href="../index.html">← Steven Ma</a>
+
+  <h1>Prediction-market data platform</h1>
+  <p class="stack">Python · SQLite · pytest · systemd · Linux VPS</p>
+  <p class="links"><a href="https://github.com/stevenmaswim/prediction-market-research-framework">source</a></p>
+
+  <h2>The problem</h2>
+  <p>To study how prediction markets move during live events, I needed a clean record of their order books over time, collected without gaps and without blowing through the data vendor's API quota.</p>
+
+  <h2>What I built</h2>
+  <p>Five long-running services on a Linux VPS, managed by systemd, that wrote 11.7M rows to SQLite:</p>
+  <ul>
+    <li>a recorder that discovers markets every 5 minutes and polls order books every 15 seconds during live windows,</li>
+    <li>a live-score detector,</li>
+    <li>close and drift trackers,</li>
+    <li>a monitor.</li>
+  </ul>
+
+  <figure>
+    <img src="../img/market-tes-lgd.svg" alt="Line chart: the price that Top Esports wins falls from 65% to about 20% after LGD wins maps 1 and 2, climbs back to about 60% after Top Esports wins maps 3 and 4, then drops to 5% at the end">
+    <figcaption>One series from the recorded data: Top Esports vs LGD Gaming, LPL Playoffs, Aug 29, 2026. 1,268 order-book snapshots at 15-second intervals. Dashed lines are map ends from the live-score detector, which logged maps 1-4. The final drop is the market pricing map 5. Drawn from the archived SQLite snapshot by <code>tools/make_market_chart.py</code>.</figcaption>
+  </figure>
+
+  <h2>A bug worth telling</h2>
+  <p>API usage spiked to about 500K tokens a day. I traced it to a change that kept re-fetching the vendor's full market catalog. The fix was a memoized catalog plus a 1-hour circuit breaker on rate-limit errors.</p>
+
+
+  <nav class="pager" aria-label="Other projects">
+    <a class="button" href="order-book.html">← Order matching engine</a>
+    <a class="button" href="../work/txdot.html">TxDOT bridge forecasting →</a>
+  </nav>
+  </div>
+</div>
+</main>
+</body>
+</html>
