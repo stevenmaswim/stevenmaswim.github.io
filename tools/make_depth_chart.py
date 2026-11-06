@@ -36,15 +36,32 @@ def cumulative(levels):
 
 bids = cumulative(DATA["bids"])   # best (highest) first
 asks = cumulative(DATA["asks"])   # best (lowest) first
-prices = [p for p, _ in bids + asks]
-x0, x1 = min(prices) - 0.01, max(prices) + 0.01
+prices = sorted(p for p, _ in bids + asks)
+x0, x1 = prices[0] - 0.01, prices[-1] + 0.01
+
+# Axis break: if the book has a wide empty run of prices (one stray order far
+# from the rest), skip it instead of spending half the width on nothing.
+gap_at = max(range(1, len(prices)), key=lambda i: prices[i] - prices[i - 1])
+BREAK = None
+if prices[gap_at] - prices[gap_at - 1] > 0.20:
+    BREAK = (round(prices[gap_at - 1] + 0.02, 2), round(prices[gap_at] - 0.01, 2))
+GAP_PX = 28
 ymax = max(c for _, c in bids + asks)
 step = 10_000 if ymax > 30_000 else 5_000
 ytop = (int(ymax / step) + 1) * step
 
 
 def x(p):
-    return L + (p - x0) / (x1 - x0) * PW
+    if BREAK is None:
+        return L + (p - x0) / (x1 - x0) * PW
+    a, b = BREAK
+    span = (a - x0) + (x1 - b)
+    scale = (PW - GAP_PX) / span
+    if p <= a:
+        return L + (p - x0) * scale
+    if p >= b:
+        return L + (a - x0) * scale + GAP_PX + (p - b) * scale
+    return L + (a - x0) * scale + GAP_PX * (p - a) / (b - a)
 
 
 def y(q):
@@ -82,15 +99,16 @@ while q <= ytop:
 # x labels every 10 cents.
 tick = round(x0 * 10 + 0.999) / 10
 while tick <= x1:
-    xx = x(tick)
-    svg.append(f'<text x="{xx:.1f}" y="{T + PH + 22}" fill="{DIM}" font-size="12" text-anchor="middle">{tick:.2f}</text>')
+    if BREAK is None or not (BREAK[0] < tick < BREAK[1]):
+        xx = x(tick)
+        svg.append(f'<text x="{xx:.1f}" y="{T + PH + 22}" fill="{DIM}" font-size="12" text-anchor="middle">{tick:.2f}</text>')
     tick = round(tick + 0.10, 2)
 svg.append(f'<text x="{L + PW}" y="{T + PH + 42}" fill="{DIM}" font-size="11" text-anchor="end">Price</text>')
 
 # The spread.
 mid = (DATA["best_bid"] + DATA["best_ask"]) / 2
 svg.append(f'<line x1="{x(mid):.1f}" x2="{x(mid):.1f}" y1="{T}" y2="{T + PH}" stroke="{DIM}" stroke-dasharray="3 4"/>')
-svg.append(f'<text x="{x(mid) + 6:.1f}" y="{T + 14}" fill="{DIM}" font-size="11">bid {DATA["best_bid"]:.2f} / ask {DATA["best_ask"]:.2f}</text>')
+svg.append(f'<text x="{x(mid) - 6:.1f}" y="{T + 14}" fill="{DIM}" font-size="11" text-anchor="end">bid {DATA["best_bid"]:.2f} / ask {DATA["best_ask"]:.2f}</text>')
 
 # The two sides.
 for levels, fill in ((bids, "url(#dots)"), (asks, "url(#hatch)")):
@@ -104,6 +122,14 @@ for i, (name, fill) in enumerate((("Bids", "url(#dots)"), ("Asks", "url(#hatch)"
     svg.append(f'<text x="{lx + 30}" y="{yy}" fill="{INK}" font-size="13">{name}</text>')
 
 svg.append(f'<line x1="{L}" x2="{L + PW}" y1="{y(0):.1f}" y2="{y(0):.1f}" stroke="{INK}" stroke-width="1.5"/>')
+
+# Mark the break: a blank band over the axis with the usual two slashes.
+if BREAK is not None:
+    ga, gb = x(BREAK[0]), x(BREAK[1])
+    svg.append(f'<rect x="{ga + 4:.1f}" y="{T}" width="{gb - ga - 8:.1f}" height="{PH + 6}" fill="{BG}"/>')
+    for dx in (ga + 7, ga + 15):
+        svg.append(f'<line x1="{dx:.1f}" y1="{y(0) + 7:.1f}" x2="{dx + 6:.1f}" y2="{y(0) - 7:.1f}" stroke="{INK}" stroke-width="1.5"/>')
+    svg.append(f'<text x="{(ga + gb) / 2:.1f}" y="{T + PH + 22}" fill="{DIM}" font-size="11" text-anchor="middle">…</text>')
 svg.append("</svg>")
 OUT.write_text("\n".join(svg) + "\n")
 print(f"{len(bids)} bid / {len(asks)} ask levels, y to {ytop:,} -> {OUT}")

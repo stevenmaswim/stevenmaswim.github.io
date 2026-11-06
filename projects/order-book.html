@@ -84,7 +84,7 @@
 
   <figure>
     <img src="../img/order-book-depth.svg" alt="Depth chart: cumulative bid quantity builds below 99.70, cumulative ask quantity builds above 100.27, with one small bid and ask a cent apart at the inside">
-    <figcaption>Book depth after one run of <code>demo.py</code>: 12,000 seeded orders from 3 trader threads, then the 25 best levels on each side. Bids dotted, asks hatched. The threads interleave differently on every run, so the exact book changes; its shape does not. Drawn by <code>tools/make_depth_chart.py</code>.</figcaption>
+    <figcaption>Book depth after one run of <code>demo.py</code>: 12,000 seeded orders from 3 trader threads, then the 25 best levels on each side. Bids dotted, asks hatched. One stray ask sits at 99.71, a cent above the best bid, and nothing else rests until 100.26, so the axis skips that empty run (the // mark). The threads interleave differently on every run, so the exact book changes; its shape does not. Drawn by <code>tools/make_depth_chart.py</code>.</figcaption>
   </figure>
 
   <table class="bench">
